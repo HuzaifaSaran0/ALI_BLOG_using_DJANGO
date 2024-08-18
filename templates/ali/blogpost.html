@@ -1,0 +1,271 @@
+{% extends 'basic.html' %}
+
+{% block title %}{{post.title}}{% endblock %}
+{% block css %}
+<style>
+    @media (max-width: 991px) {
+        #navi {
+            padding-left: 21px;
+        }
+    }
+
+    .d-flex {
+        margin-left: 12px;
+        margin-right: 12px;
+        /* height: 39px; */
+    }
+
+    @media (max-width: 991px) {
+        #navi {
+            padding-left: 21px;
+        }
+    }
+
+    .welcome {
+        color: white;
+    }
+
+    @media (max-width: 500px) {
+        .welcome {
+            display: none;
+        }
+    }
+
+    .welcome {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        margin: 0px 20px;
+        font-family: cursive;
+    }
+
+    .row {
+        padding: 10px 12px;
+        margin-left: 0px;
+        margin-right: 0px;
+        /* border: 1px solid black; */
+    }
+
+    .col-md-1 {
+        border: 1px solid black;
+        padding: 0px;
+    }
+
+    .col-md-11 {}
+
+    .font {
+        font-size: large;
+        font-family: sans-serif;
+    }
+
+    .comment-img {
+        width: 50px;
+        /* Fixed size for the image */
+        height: 50px;
+        border: 3px solid #000000;
+        border-radius: 10%;
+
+    }
+
+    @media (min-width: 768px) {
+        .comment-img {
+            width: 40px;
+            /* Slightly smaller size for medium screens */
+            height: 40px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .comment-img {
+            width: 60px;
+            /* Larger size for large screens */
+            height: 60px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .welcome {
+            display: none;
+        }
+    }
+
+    .areply {
+        cursor: pointer;
+    }
+
+    .the_reply {
+        border: 1px solid black;
+    }
+    h3 {
+    font-size: calc(1.3rem + .6vw);
+    background-color: white;
+    margin: 0px;
+}
+p{
+font-size: larger; 
+font-family: Impact, Haettenschweiler 'Arial Narrow Bold', sans-serif; 
+font-weight: 400;
+}
+</style>
+{% endblock %}
+{% block body %}
+{% load humanize %}
+{% load get_dict %}
+
+<div class="container my-3 col-md-8 col-lg-7">
+    <article class="blog-post">
+        <!-- Post Title and Metadata -->
+        <h1 class="display-5 font-weight-bold" style="font-weight: 700;">{{ post.title }}</h1>
+        <p class="text-muted">{{ post.time_stamp|date:"F j, Y" }} by {{ post.author }}</p>
+        {% if post.image3 %}
+        <!-- <img src="{{ post.image3.url }}" alt="Additional Image" class="img-fluid my-3"> -->
+        <img src="{{ post.image3.url }}" alt="Description" style="width: 500px; height: auto;" class="img-fluid my-3">
+
+        {% endif %}
+        <!-- Introduction -->
+        <p class="lead">{{ post.intro|safe }}</p>
+
+        <!-- Main Content -->
+        <p>{{ post.content }}</p>
+
+
+        <!-- First Section -->
+        {% if post.section1_title %}
+        <h2>{{ post.section1_title }}</h2>
+        <p>{{ post.section1_content }}</p>
+        {% if post.image1 %}
+        <img src="{{ post.image1.url }}" alt="Section 1 Image" class="img-fluid my-3">
+        {% endif %}
+        {% endif %}
+
+        <!-- Second Section -->
+        {% if post.section2_title %}
+        <h2>{{ post.section2_title }}</h2>
+        <p>{{ post.section2_content }}</p>
+        {% if post.image2 %}
+        <img src="{{ post.image2.url }}" alt="Description" style="width: 500px; height: auto;" class="img-fluid my-3">
+        {% endif %}
+        {% endif %}
+
+        <!-- Additional Images -->
+
+
+    </article>
+</div>
+
+
+
+
+<!-- Comments Section For Every Blog post -->
+<div class="container my-3 col-md-6 col-lg-7">
+    <hr>
+    <section>
+        <div class="my-2">
+            {% if not user.is_authenticated %}
+            <h2><a href="/signin" style="text-decoration: none;">Sign in </a> to leave a comment</h2>
+            {% else %}
+            <form action="/blog/postComment/" method="post" class="my-3">
+                {% csrf_token %}
+                <h3>Comments({{count}})</h3>
+                <div class="card-footer py-3 border-0">
+                    <div class="d-flex flex-start w-90">
+                        <div data-mdb-input-init class="form-outline w-100">
+                            <textarea type="text" name="comment" class="form-control" rows="4" style="background: #fff;"
+                                placeholder="Leave your thoughts"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="postSno" value="{{post.sno}}">
+                    <input type="hidden" name="parentsno" value="">
+
+                    <div class="float-end mt-2 pt-1 mx-2">
+                        <button type="submit" class="btn btn-primary btn-sm">Post
+                            comment</button>
+                        <button type="button" data-mdb-button-init data-mdb-ripple-init
+                            class="btn btn-outline-primary btn-sm">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+    </section>
+    <br>
+    {% for comment in comments %}
+    <div class="row align-items-start">
+        <div class="col-auto">
+            <img class="img-fluid comment-img" src="/static/this.jpg" alt="user">
+        </div>
+        <div class="col">
+            <b>{{comment.user.username}}</b> <span
+                style="font-weight: lighter;">{{comment.time_stamp|naturaltime}}</span>
+            <div>{{comment.comment}}</div>
+
+            <div class="reply">
+                <p class="d-inline-flex gap-1">
+                    <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#reply{{comment.postSno}}" aria-expanded="false"
+                        aria-controls="reply{{comment.postSno}}">
+                        Reply
+                    </button>
+                </p>
+                {% if not user.is_authenticated %}
+                <div class="collapse" id="reply{{comment.postSno}}">
+                    <h3><a href="/signin" style="text-decoration: none;">Sign in </a> to reply to comments</h3>
+                </div>
+                {% else %}
+                <div class="collapse" id="reply{{comment.postSno}}">
+                    <form action="/blog/postComment/" method="post">
+                        {% csrf_token %}
+                        <div class="d-flex flex-start w-90">
+                            <div data-mdb-input-init class="form-outline w-100">
+                                <textarea type="text" name="reply" class="form-control" rows="3"
+                                    style="background: #fff;" placeholder="Write a reply"></textarea>
+                                <input type="hidden" name="parentsno" value="{{comment.postSno}}">
+
+                            </div>
+                        </div>
+                        <input type="hidden" name="postSno" value="{{post.sno}}">
+
+                        <div class="float-end mt-2 pt-1">
+                            <button type="submit" class="btn btn-primary btn-sm">Post
+                                Reply</button>
+                            <button type="button" data-mdb-button-init data-mdb-ripple-init
+                                class="btn btn-outline-primary btn-sm">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="replies">
+
+                    {% for reply in repDict|get_val:comment.postSno %}
+                    <div class="row align-items-start my-3">
+
+                        <div class="col-auto">
+                            <img class="img-fluid comment-img" src="/static/this.jpg" alt="user">
+                        </div>
+                        <div class="col">
+                            <b>{{reply.user.username}}</b> <span
+                                style="font-weight: lighter;">{{reply.time_stamp|naturaltime}}</span>
+                            <div>{{reply.comment}}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+    <!-- Your content for the about page goes here -->
+    {% endblock %}
+
+
+    <!-- for image we have to put that image into img folder of static folder AND 
+ in the Settings.py write this:
+    STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+    ]       
+ -->

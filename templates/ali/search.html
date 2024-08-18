@@ -1,0 +1,41 @@
+{% extends 'basic.html' %}
+
+{% block title %}Blog{% endblock %}
+{% block bloghomeactive %}active{% endblock %}
+{% block body %}
+
+
+<div class="container my-4">
+    <h3>Search Results:</h3>
+    {% if all_posts|length <= 0 %}
+    <span>No results found for <b>{{query|truncatechars:20}}</b></span><br>
+    <span>Suggestions:</span><br>
+    <ul>
+      <li>Make sure all words are spelled correctly.</li>
+      <li>Try different keywords.</li>
+      <li>Try more general keywords.</li>
+    </ul>
+
+
+
+    {% else %}
+    <br>
+    <div class="row">
+      {% for blog in all_posts %}
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+        <div class="card shadow-sm border-0 rounded">
+          <img src="/{{blog.image1}}" class="card-img-top" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ blog.title }}</h5>
+            <p class="card-text">{{ blog.content|truncatechars:100 }}</p>
+            <p class="card-text"><small class="text-muted">By {{ blog.author }} on {{ blog.timestamp }}</small></p>
+            <a href="/blog/{{ blog.slug }}" class="btn btn-primary mt-auto">Read More</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

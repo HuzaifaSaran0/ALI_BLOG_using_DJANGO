@@ -1,0 +1,33 @@
+{% extends 'basic.html' %}
+
+{% block title %}Blog Home{% endblock %}
+{% block bloghomeactive %}active{% endblock bloghomeactive%}
+
+{% block body %}
+<div class="container my-5">
+  <div class="row">
+    <div class="col text-center">
+      <h1 class="display-4">Welcome to the Blog</h1>
+      <p class="lead">Discover the latest articles and insights from our writers.</p>
+      <hr class="my-4">
+    </div>
+  </div>
+
+  <div class="row">
+    {% for blog in all_posts %}
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4 align-items-stretch">
+      <div class="card shadow-sm border-0 rounded">
+        <img src="/{{blog.image1}}" class="card-img-top" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ blog.title|truncatechars:40 }}</h5>
+          <p class="card-text">{{ blog.content|truncatechars:100 }}</p>
+          <p class="card-text"><small class="text-muted">By {{ blog.author }} on {{ blog.time_stamp }}</small></p>
+          <a href="/blog/{{ blog.slug }}" class="btn btn-outline-primary mt-auto">Read More</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

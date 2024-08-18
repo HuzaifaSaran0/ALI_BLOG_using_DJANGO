@@ -1,0 +1,100 @@
+{% extends 'basic.html' %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block css%}
+<style>
+    @media (max-width: 991px) {
+        #navi {
+            padding-left: 21px;
+        }
+    }
+
+    .d-flex {
+        margin-left: 12px;
+        margin-right: 12px;
+        height: 39px;
+    }
+
+
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .form-signin {
+        max-width: 400px;
+        padding: 15px;
+        margin: 40px auto;
+        background-color: #535151;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(136, 22, 22, 0.1);
+
+    }
+
+    .form-signin h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: cursive;
+        color: #f8f9fa;
+    }
+
+    .form-floating {
+        margin-bottom: 15px;
+    }
+
+    .form-floating label {
+        color: #6c757d;
+    }
+
+    .form-control {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 1.125rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .text-body-secondary {
+        color: #000000 !important;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <main class="form-signin">
+        <form action="/signin/" method="post">
+            {% csrf_token %}
+            <h1>Sign In</h1>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="loginusername" placeholder="ali89762"
+                    required>
+                <label for="loginusername">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="loginPassword" name="loginpassword"
+                    placeholder="Password" required>
+                <label for="loginpassword">Password</label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" type="submit">Sign In</button>
+            <p class="mt-3 mb-1 text-body-secondary">&copy; Huzaifa</p>
+        </form>
+    </main>
+</div>
+{% endblock %}
